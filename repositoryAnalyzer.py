@@ -12,6 +12,7 @@ from pydriller import Repository
 REPO_PATH: str = "/home/user/repository"
 
 # List of file extensions that are analyzed
+FILTER_NAMES: list = ['main']
 FILTER_FILE_TYPES: list = ['.cpp', '.c']
 
 
@@ -34,7 +35,7 @@ class ParsedCommit:
         return f"{self.hash}, {self.date}, {self.user}, {self.email}, {self.file_name}, {self.ccn}, {self.avgCCN}"
 
 
-def parse_commits(repo_path: str, filter_by_extension: list[str]) -> list[ParsedCommit]:
+def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension: list[str]) -> list[ParsedCommit]:
     """Extracts information form the commits on the repository path
 
     Args:
@@ -66,7 +67,7 @@ def parse_commits(repo_path: str, filter_by_extension: list[str]) -> list[Parsed
                 continue
 
             file_name, file_ext = path.splitext(file.filename)
-            if file_ext in filter_by_extension:
+            if (file_ext in filter_by_extension) and (file_name in filter_by_name):
 
                 complexity = file.complexity
                 num_of_methods: int = len(file._function_list)
@@ -105,7 +106,7 @@ if __name__ == '__main__':
 
     print("::: [ Git Repository Analyzer ] :::")
 
-    parsed_commit = parse_commits(REPO_PATH, FILTER_FILE_TYPES)
+    parsed_commit = parse_commits(REPO_PATH, FILTER_NAMES, FILTER_FILE_TYPES)
 
     file_list = get_list_of_files(parsed_commit)
 
