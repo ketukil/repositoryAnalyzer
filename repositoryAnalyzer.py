@@ -76,15 +76,17 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
             file_name, file_ext = path.splitext(file.filename)
             complexity = file.complexity
 
-            # Skip if file has no complexity or it is less than one
-            if (complexity is None) or (complexity < 1):
-                print(f"\t - skipped: {file_name}{file_ext} (ccn: {complexity})")
-                continue
             # Skip files name that are not in the filter
             if (file_name not in filter_by_name) and (len(filter_by_name) > 0):
                 continue
             # Skip files extensions that are not in the filter
             if (file_ext not in filter_by_extension) and (len(filter_by_extension) > 0):
+                continue
+            # Skip if file has no complexity
+            if (complexity is None):
+                print(
+                    f"\t - skipped: {file_name}{file_ext}")
+                print(commit.msg)
                 continue
 
             num_of_methods: int = len(file.methods)
