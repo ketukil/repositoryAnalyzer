@@ -54,7 +54,7 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
 
     for commit in list_of_commits:
         date = str(commit.author_date)
-        hash = str(commit.hash)
+        git_hash = str(commit.hash)
         user = str(commit.author.name)
         email = str(commit.author.email)
 
@@ -64,7 +64,7 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
 
         print(f"\tcommit: {date} by {user} ({email})")
         if commit.modified_files is None:
-            print(f"*** MERGE {hash} @ {date} by {user} ({email}) ***")
+            print(f"*** MERGE {git_hash} @ {date} by {user} ({email}) ***")
 
         for file in commit.modified_files:
             file_name, file_ext = path.splitext(file.filename)
@@ -89,7 +89,7 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
                     avg_complexity = 0
 
                 linear_history_list.append(
-                    ParsedCommit(hash, date, user, email, file_name, complexity, avg_complexity))
+                ParsedCommit(git_hash, date, user, email, file_name, complexity, avg_complexity))
 
     return linear_history_list
 
