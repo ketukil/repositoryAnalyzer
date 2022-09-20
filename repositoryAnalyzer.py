@@ -159,6 +159,8 @@ def write_data_to_json(output_file_name: str, data):
 
 
 def group_data_by_date(input_data: list[ParsedCommit]) -> list:
+    """Group data by date
+    """
     # Sort items by file
     input_data.sort(key=lambda x: x.date)
     # Group items by file
