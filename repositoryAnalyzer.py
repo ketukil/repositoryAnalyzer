@@ -33,7 +33,7 @@ class ParsedCommit:
         self.date: str = commit_date
         self.user: str = user_name
         self.email: str = user_email
-        self.branches: set[str] = branches
+        self.branches: list[str] = sorted(list(branches))
         self.file_name: str = file_name
         self.ccn: int = complexity
         # self.avgCCN: str = "%.3f" % avg_complexity
