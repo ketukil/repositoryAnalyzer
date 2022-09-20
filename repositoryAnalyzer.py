@@ -175,16 +175,21 @@ if __name__ == '__main__':
         parsed_commit_list, key=lambda x: x.hash)]
 
     # To change a structure of JSON data change this part
-    data = {}
-    for group in groupedByFile:
-        group_name = group[0].file_name
-        item_data = dict()
+    data = []
+    for group in grouped:
+
+        record = dict(
+            hash=group[0].hash,
+            timestamp=group[0].date,
+            user=group[0].user,
+            user_email=group[0].email,
+            branches=group[0].branches
+        )
+
         for item in group:
-            item_data[item.date] = {
-                'hash': item.hash,
-                'accn': item.avg_ccn,
-                'ccn': item.ccn}
-        data[group_name] = item_data
+            record[item.file_name] = f"{item.avg_ccn:.3f}"
+
+        data.append(record)
 
     print(" * Write a JSON files")
     write_data_to_json(OUTPUT_FILE_NAME, data)
