@@ -27,12 +27,13 @@ class ParsedCommit:
     def __init__(self,
                  commit_hash: str, commit_date: str, user_name: str,
                  user_email: str, file_name: str, complexity: int,
-                 avg_complexity: float):
+                 avg_complexity: float, branches: set[str]):
 
         self.hash: str = commit_hash
         self.date: str = commit_date
         self.user: str = user_name
         self.email: str = user_email
+        self.branches: set[str] = branches
         self.file_name: str = file_name
         self.ccn: int = complexity
         # self.avgCCN: str = "%.3f" % avg_complexity
@@ -62,7 +63,7 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
         git_hash = str(commit.hash)
         user = str(commit.author.name)
         email = str(commit.author.email)
-
+        branches_list = commit.branches
         # skip commits without proper user email
         if (email not in filter_by_email) and (len(filter_by_email) > 0):
             continue
@@ -94,7 +95,14 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
                     avg_complexity = 0
 
                 linear_history_list.append(
-                ParsedCommit(git_hash, date, user, email, file_name, complexity, avg_complexity))
+                ParsedCommit(commit_hash=git_hash,
+                             commit_date=date,
+                             user_name=user,
+                             user_email=email,
+                             file_name=file_name,
+                             complexity=complexity,
+                             avg_complexity=avg_complexity,
+                             branches=branches_list))
 
     return linear_history_list
 
