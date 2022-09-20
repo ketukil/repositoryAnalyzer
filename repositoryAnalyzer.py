@@ -114,6 +114,24 @@ def get_list_of_files(data: list[ParsedCommit]) -> list[str]:
     return sorted(list_of_files)
 
 
+def get_list_of_user_emails(data: list[ParsedCommit]) -> list[str]:
+    """Gets a list of users from the parsed commit data
+
+    Args:
+        data (list[ParsedCommit]): List of ParsedCommit objects containing parsed data
+
+    Returns:
+        list[str]: List of user emails
+    """
+    list_of_emails = list()
+
+    for item in data:
+        if item.email not in list_of_emails:
+            list_of_emails.append(item.email)
+
+    return sorted(list_of_emails)
+
+
 def write_data_to_json(output_file_name: str, data):
     """Writes data to a JSON file
 
@@ -133,6 +151,7 @@ if __name__ == '__main__':
     parsed_commit = parse_commits(REPO_PATH, FILTER_NAMES, FILTER_FILE_TYPES)
 
     file_list = get_list_of_files(parsed_commit)
+    email_list = get_list_of_user_emails(parsed_commit)
 
     # Sort items by file
     parsed_commit.sort(key=lambda x: x.file_name)
