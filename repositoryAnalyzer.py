@@ -5,6 +5,7 @@ import json
 from os import path
 from itertools import groupby
 from pydriller import Repository
+from dataclasses import dataclass
 
 # Path to the repository (absolute or relative path)
 REPO_PATH: str = "/home/user/repository"
@@ -18,7 +19,11 @@ FILTER_FILE_TYPES: list[str] = []
 OUTPUT_FILE_NAME: str = "out.json"
 
 
+@dataclass
 class ParsedCommit:
+    """Contains parsed commit data
+    """
+
     def __init__(self,
                  commit_hash: str, commit_date: str, user_name: str,
                  user_email: str, file_name: str, complexity: int,
