@@ -83,7 +83,7 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
             if (file_ext not in filter_by_extension) and (len(filter_by_extension) > 0):
                 continue
             # Skip if file has no complexity
-            if (complexity is None):
+            if complexity is None:
                 print(
                     f"\t - skipped: {file_name}{file_ext}")
                 print(commit.msg)
