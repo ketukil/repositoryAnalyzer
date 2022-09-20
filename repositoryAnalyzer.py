@@ -158,6 +158,9 @@ def write_data_to_json(output_file_name: str, data):
         f.write(json_object)
 
 
+def group_data_by_date(input_data: list[ParsedCommit]) -> list:
+    ...
+
 if __name__ == '__main__':
 
     print("::: [ Git Repository Analyzer ] :::")
