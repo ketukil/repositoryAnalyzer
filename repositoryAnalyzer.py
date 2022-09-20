@@ -145,8 +145,10 @@ def write_data_to_json(output_file_name: str, data):
 if __name__ == '__main__':
 
     print("::: [ Git Repository Analyzer ] :::")
-
-    parsed_commit = parse_commits(REPO_PATH, FILTER_NAMES, FILTER_FILE_TYPES)
+    print(" * Parsing commits ...")
+    parsed_commit = parse_commits(
+        REPO_PATH, FILTER_FILE_NAMES, FILTER_FILE_TYPES, FILTER_USER_EMAIL)
+    print(" * Commit parsing done")
 
     file_list = get_list_of_files(parsed_commit)
     email_list = get_list_of_user_emails(parsed_commit)
