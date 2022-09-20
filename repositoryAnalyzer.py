@@ -173,3 +173,6 @@ if __name__ == '__main__':
     write_data_to_json(OUTPUT_FILE_NAME, data)
     write_data_to_json('file_list.json', file_list)
     write_data_to_json('user_list.json', email_list)
+
+    print(" * Done")
+    exit(0)
