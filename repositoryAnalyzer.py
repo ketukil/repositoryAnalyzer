@@ -2,10 +2,8 @@
 """
 
 import json
-from itertools import groupby
 from os import path
-
-import matplotlib.pyplot as plt
+from itertools import groupby
 from pydriller import Repository
 
 # Path to the repository (absolute or relative path)
