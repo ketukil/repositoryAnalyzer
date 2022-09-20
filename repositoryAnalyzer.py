@@ -161,18 +161,18 @@ if __name__ == '__main__':
 
     print("::: [ Git Repository Analyzer ] :::")
     print(" * Parsing commits ...")
-    parsed_commit = parse_commits(
+    parsed_commit_list = parse_commits(
         REPO_PATH, FILTER_FILE_NAMES, FILTER_FILE_TYPES, FILTER_USER_EMAIL)
     print(" * Commit parsing done")
 
-    file_list = get_list_of_files(parsed_commit)
-    email_list = get_list_of_user_emails(parsed_commit)
+    file_list = get_list_of_files(parsed_commit_list)
+    email_list = get_list_of_user_emails(parsed_commit_list)
 
     # Sort items by file
-    parsed_commit.sort(key=lambda x: x.file_name)
+    parsed_commit_list.sort(key=lambda x: x.date)
     # Group items by file
-    groupedByFile = [list(result) for key, result in groupby(
-        parsed_commit, key=lambda x: x.file_name)]
+    grouped = [list(result) for key, result in groupby(
+        parsed_commit_list, key=lambda x: x.hash)]
 
     # To change a structure of JSON data change this part
     data = {}
