@@ -90,14 +90,14 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
                 continue
 
             num_of_methods: int = len(file.methods)
-                avg_complexity: float = 0
+            avg_complexity: float = 0
 
-                if num_of_methods > 0:
-                    avg_complexity = complexity / num_of_methods
-                else:
-                    avg_complexity = 0
+            if num_of_methods > 0:
+                avg_complexity = complexity / num_of_methods
+            else:
+                avg_complexity = 0
 
-                linear_history_list.append(
+            linear_history_list.append(
                 ParsedCommit(commit_hash=git_hash,
                              commit_date=date,
                              user_name=user,
