@@ -13,10 +13,10 @@ REPO_PATH: str = "/home/user/repository"
 # Filter repository to only what is needed, empty lists don't filter anything
 FILTER_USER_EMAIL: list[str] = []
 FILTER_FILE_NAMES: list[str] = []
-FILTER_FILE_TYPES: list[str] = []
+FILTER_FILE_TYPES: list[str] = ['.c', '.cpp']
 
 # Output file name
-OUTPUT_FILE_NAME: str = "out.json"
+OUTPUT_FILE_NAME: str = "output"
 
 
 @dataclass
@@ -154,7 +154,7 @@ def write_data_to_json(output_file_name: str, data):
         data (Any): List or Dictionary
     """
     json_object = json.dumps(data, indent=2)
-    with open(output_file_name, "w", encoding="utf-8") as f:
+    with open(output_file_name+'.json', "w", encoding="utf-8") as f:
         f.write(json_object)
 
 
@@ -194,8 +194,8 @@ if __name__ == '__main__':
 
     print(" * Write a JSON files")
     write_data_to_json(OUTPUT_FILE_NAME, data)
-    write_data_to_json('file_list.json', file_list)
-    write_data_to_json('user_list.json', email_list)
+    write_data_to_json(OUTPUT_FILE_NAME+'_file_list', file_list)
+    write_data_to_json(OUTPUT_FILE_NAME+'_email_list', email_list)
 
     print(" * Done")
     exit(0)
