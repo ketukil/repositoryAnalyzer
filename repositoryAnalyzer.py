@@ -159,7 +159,26 @@ def write_data_to_json(output_file_name: str, data):
 
 
 def group_data_by_date(input_data: list[ParsedCommit]) -> list:
-    ...
+    # Sort items by file
+    input_data.sort(key=lambda x: x.date)
+    # Group items by file
+    grouped = [list(result) for key, result in groupby(
+        input_data, key=lambda x: x.hash)]
+
+    data = []
+    for group in grouped:
+        record = dict(
+            hash=group[0].hash,
+            timestamp=group[0].date,
+            user=group[0].user,
+            user_email=group[0].email,
+            branches=group[0].branches
+        )
+        for item in group:
+            record[item.file_name] = f"{item.avg_ccn:.3f}"
+        data.append(record)
+    return data
+
 
 if __name__ == '__main__':
 
@@ -172,31 +191,10 @@ if __name__ == '__main__':
     file_list = get_list_of_files(parsed_commit_list)
     email_list = get_list_of_user_emails(parsed_commit_list)
 
-    # Sort items by file
-    parsed_commit_list.sort(key=lambda x: x.date)
-    # Group items by file
-    grouped = [list(result) for key, result in groupby(
-        parsed_commit_list, key=lambda x: x.hash)]
-
-    # To change a structure of JSON data change this part
-    data = []
-    for group in grouped:
-
-        record = dict(
-            hash=group[0].hash,
-            timestamp=group[0].date,
-            user=group[0].user,
-            user_email=group[0].email,
-            branches=group[0].branches
-        )
-
-        for item in group:
-            record[item.file_name] = f"{item.avg_ccn:.3f}"
-
-        data.append(record)
+    data_by_date = group_data_by_date(parsed_commit_list)
 
     print(" * Write a JSON files")
-    write_data_to_json(OUTPUT_FILE_NAME, data)
+    write_data_to_json(OUTPUT_FILE_NAME, data_by_date)
     write_data_to_json(OUTPUT_FILE_NAME+'_file_list', file_list)
     write_data_to_json(OUTPUT_FILE_NAME+'_email_list', email_list)
 
