@@ -36,10 +36,10 @@ class ParsedCommit:
         self.file_name: str = file_name
         self.ccn: int = complexity
         # self.avgCCN: str = "%.3f" % avg_complexity
-        self.avgCCN: float = avg_complexity
+        self.avg_ccn: float = avg_complexity
 
     def __repr__(self) -> str:
-        return f"{self.hash}, {self.date}, {self.user}, {self.email}, {self.file_name}, {self.ccn}, {self.avgCCN}"
+        return f"{self.hash}, {self.date}, {self.user}, {self.email}, {self.file_name}, {self.ccn}, {self.avg_ccn}"
 
 
 def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension: list[str], filter_by_email: list[str]) -> list[ParsedCommit]:
@@ -171,8 +171,10 @@ if __name__ == '__main__':
         item_data = dict()
         for item in group:
             item_data[item.date] = {
-                'avg_ccn': item.avgCCN, 'abs_ccn': item.ccn}
-        data[group_name] = {'timestamp': item_data}
+                'hash': item.hash,
+                'accn': item.avg_ccn,
+                'ccn': item.ccn}
+        data[group_name] = item_data
 
     print(" * Write a JSON files")
     write_data_to_json(OUTPUT_FILE_NAME, data)
