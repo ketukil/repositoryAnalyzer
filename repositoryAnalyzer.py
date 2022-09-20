@@ -11,9 +11,10 @@ from pydriller import Repository
 # Path to the repository (absolute or relative path)
 REPO_PATH: str = "/home/user/repository"
 
-# List of file extensions that are analyzed
-FILTER_NAMES: list = ['main']
-FILTER_FILE_TYPES: list = ['.cpp', '.c']
+# Filter repository to only what is needed, empty lists don't filter anything
+FILTER_USER_EMAIL: list[str] = []
+FILTER_FILE_NAMES: list[str] = []
+FILTER_FILE_TYPES: list[str] = []
 
 
 class ParsedCommit:
@@ -35,7 +36,7 @@ class ParsedCommit:
         return f"{self.hash}, {self.date}, {self.user}, {self.email}, {self.file_name}, {self.ccn}, {self.avgCCN}"
 
 
-def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension: list[str]) -> list[ParsedCommit]:
+def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension: list[str], filter_by_email: list[str]) -> list[ParsedCommit]:
     """Extracts information form the commits on the repository path
 
     Args:
@@ -50,27 +51,35 @@ def parse_commits(repo_path: str, filter_by_name: list[str], filter_by_extension
     repo = Repository(repo_path)
     list_of_commits = repo.traverse_commits()
 
-    print(" * Parsing commits")
     for commit in list_of_commits:
         date = str(commit.author_date)
         hash = str(commit.hash)
         user = str(commit.author.name)
         email = str(commit.author.email)
 
-        print(f"\tcommit: {date} by {user} ({email}) | {commit.branches}")
+        # skip commits without proper user email
+        if (email not in filter_by_email) and (len(filter_by_email) > 0):
+            continue
+
+        print(f"\tcommit: {date} by {user} ({email})")
         if commit.modified_files is None:
             print(f"*** MERGE {hash} @ {date} by {user} ({email}) ***")
 
         for file in commit.modified_files:
+            file_name, file_ext = path.splitext(file.filename)
+
             # Skip if file has no complexity (zero is still some complexity)
             if file.complexity is None:
                 continue
-
-            file_name, file_ext = path.splitext(file.filename)
-            if (file_ext in filter_by_extension) and (file_name in filter_by_name):
+            # Skip files name that are not in the filter
+            if (file_name not in filter_by_name) and (len(filter_by_name) > 0):
+                continue
+            # Skip files extensions that are not in the filter
+            if (file_ext not in filter_by_extension) and (len(filter_by_extension) > 0):
+                continue
 
                 complexity = file.complexity
-                num_of_methods: int = len(file._function_list)
+            num_of_methods: int = len(file.methods)
                 avg_complexity: float = 0
 
                 if num_of_methods > 0:
