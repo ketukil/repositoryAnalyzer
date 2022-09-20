@@ -16,6 +16,9 @@ FILTER_USER_EMAIL: list[str] = []
 FILTER_FILE_NAMES: list[str] = []
 FILTER_FILE_TYPES: list[str] = []
 
+# Output file name
+OUTPUT_FILE_NAME: str = "out.json"
+
 
 class ParsedCommit:
     def __init__(self,
@@ -111,6 +114,18 @@ def get_list_of_files(data: list[ParsedCommit]) -> list[str]:
     return sorted(list_of_files)
 
 
+def write_data_to_json(output_file_name: str, data):
+    """Writes data to a JSON file
+
+    Args:
+        output_file_name (str): File name
+        data (Any): List or Dictionary
+    """
+    json_object = json.dumps(data, indent=2)
+    with open(output_file_name, "w", encoding="utf-8") as f:
+        f.write(json_object)
+
+
 if __name__ == '__main__':
 
     print("::: [ Git Repository Analyzer ] :::")
@@ -135,6 +150,7 @@ if __name__ == '__main__':
                 'avg_ccn': item.avgCCN, 'abs_ccn': item.ccn}
         data[group_name] = {'timestamp': item_data}
 
-    json_object = json.dumps(data, indent=2)
-    with open("out.json", "w", encoding="utf-8") as f:
-        f.write(json_object)
+    print(" * Write a JSON files")
+    write_data_to_json(OUTPUT_FILE_NAME, data)
+    write_data_to_json('file_list.json', file_list)
+    write_data_to_json('user_list.json', email_list)
