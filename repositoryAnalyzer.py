@@ -4,8 +4,8 @@
 import json
 from os import path
 from itertools import groupby
-from pydriller import Repository
 from dataclasses import dataclass
+from pydriller import Repository
 
 # Path to the repository (absolute or relative path)
 REPO_PATH: str = "/home/user/repository"
