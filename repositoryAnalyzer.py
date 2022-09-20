@@ -182,6 +182,28 @@ def group_data_by_date(input_data: list[ParsedCommit]) -> list:
     return data
 
 
+def group_data_by_file(input_data: list[ParsedCommit]) -> list:
+    """Group data by file name
+    """
+    # Sort items by file
+    input_data.sort(key=lambda x: x.file_name)
+    # Group items by file
+    grouped = [list(result) for key, result in groupby(
+        input_data, key=lambda x: x.file_name)]
+
+    data = []
+    for group in grouped:
+        file_name = group[0].file_name
+
+        record = dict(filename=file_name)
+        for item in group:
+            record[item.date] = f'{item.avg_ccn:.3f}'
+
+        data.append(record)
+
+    return data
+
+
 if __name__ == '__main__':
 
     print("::: [ Git Repository Analyzer ] :::")
@@ -193,10 +215,11 @@ if __name__ == '__main__':
     file_list = get_list_of_files(parsed_commit_list)
     email_list = get_list_of_user_emails(parsed_commit_list)
 
-    data_by_date = group_data_by_date(parsed_commit_list)
+    # grouped_data = group_data_by_date(parsed_commit_list)
+    grouped_data = group_data_by_file(parsed_commit_list)
 
     print(" * Write a JSON files")
-    write_data_to_json(OUTPUT_FILE_NAME, data_by_date)
+    write_data_to_json(OUTPUT_FILE_NAME, grouped_data)
     write_data_to_json(OUTPUT_FILE_NAME+'_file_list', file_list)
     write_data_to_json(OUTPUT_FILE_NAME+'_email_list', email_list)
 
